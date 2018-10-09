@@ -52,6 +52,9 @@ protected:
 	virtual void BeginPlay();
 
 public:
+
+	const float MaxAmmo = 10;
+
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseTurnRate;
@@ -81,7 +84,10 @@ public:
 	uint32 bUsingMotionControllers : 1;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
-		float Speed = 1;
+		float Ammo = 10;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+		float Power = 0;
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Weapon")
 		void WeaponFired();
@@ -90,6 +96,12 @@ protected:
 	
 	/** Fires a projectile. */
 	void OnFire();
+
+	/** Reload ammo. */
+	void OnReload();
+
+	/** Use Power. */
+	void UsePower();
 
 	/** Resets HMD orientation and position in VR. */
 	void OnResetVR();

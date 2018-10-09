@@ -11,6 +11,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "MotionControllerComponent.h"
 #include "XRMotionControllerBase.h" // for FXRMotionControllerBase::RightHandSourceId
+#include "GameFramework/CharacterMovementComponent.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
 
@@ -120,6 +121,12 @@ void AGEPCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInput
 	// Bind fire event
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AGEPCharacter::OnFire);
 
+	// Bind reload event
+	PlayerInputComponent->BindAction("Reload", IE_Pressed, this, &AGEPCharacter::OnReload);
+
+	// Bind reload Power event
+	PlayerInputComponent->BindAction("UsePower", IE_Pressed, this, &AGEPCharacter::UsePower);
+
 	// Enable touchscreen input
 	EnableTouchscreenMovement(PlayerInputComponent);
 
@@ -140,6 +147,8 @@ void AGEPCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInput
 
 void AGEPCharacter::OnFire()
 {
+	if (Ammo <= 0) return;
+
 	// try and fire a projectile
 	if (ProjectileClass != NULL)
 	{
@@ -165,6 +174,8 @@ void AGEPCharacter::OnFire()
 				// spawn the projectile at the muzzle
 				WeaponFired();
 				World->SpawnActor<AGEPProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
+
+				Ammo -= 1;
 			}
 		}
 	}
@@ -184,6 +195,21 @@ void AGEPCharacter::OnFire()
 		{
 			AnimInstance->Montage_Play(FireAnimation, 1.f);
 		}
+	}
+}
+
+void AGEPCharacter::OnReload()
+{
+	Ammo = MaxAmmo;
+}
+
+void AGEPCharacter::UsePower()
+{
+	if (Power == 100.0f)
+	{
+		Power = 0;
+
+		GetCharacterMovement()->MaxWalkSpeed = 1000;
 	}
 }
 
@@ -260,7 +286,7 @@ void AGEPCharacter::MoveForward(float Value)
 	if (Value != 0.0f)
 	{
 		// add movement in that direction
-		AddMovementInput(GetActorForwardVector(), Value * Speed);
+		AddMovementInput(GetActorForwardVector(), Value);
 	}
 }
 
@@ -269,7 +295,7 @@ void AGEPCharacter::MoveRight(float Value)
 	if (Value != 0.0f)
 	{
 		// add movement in that direction
-		AddMovementInput(GetActorRightVector(), Value * Speed);
+		AddMovementInput(GetActorRightVector(), Value);
 	}
 }
 
