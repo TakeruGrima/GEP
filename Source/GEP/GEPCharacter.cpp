@@ -85,13 +85,17 @@ AGEPCharacter::AGEPCharacter()
 	// Uncomment the following line to turn motion controllers on by default:
 	//bUsingMotionControllers = true;
 
-	Ability = CreateDefaultSubobject<AGEPAbility>(TEXT("Ability"));
+	
 }
 
 void AGEPCharacter::BeginPlay()
 {
 	// Call the base class  
 	Super::BeginPlay();
+
+	Ability = (AGEPAbility*)GetWorld()->SpawnActor(AbilityClass);
+
+	//Ability = CreateDefaultSubobject<AGEPAbility>(TEXT("Ability"));
 
 	//Attach gun mesh component to Skeleton, doing it here because the skeleton is not yet created in the constructor
 	FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));
