@@ -71,6 +71,12 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category=Projectile)
 	TSubclassOf<class AGEPProjectile> ProjectileClass;
 
+	/** Ability */
+	UPROPERTY(EditDefaultsOnly, Category = Ability)
+		TSubclassOf<class AGEPAbility> AbilityClass;
+
+	AGEPAbility * Ability;
+
 	/** Sound to play each time we fire */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Gameplay)
 	class USoundBase* FireSound;
@@ -101,7 +107,7 @@ protected:
 	void OnReload();
 
 	/** Use Power. */
-	void UsePower();
+	void OnAbilityActivated();
 
 	/** Resets HMD orientation and position in VR. */
 	void OnResetVR();

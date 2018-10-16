@@ -12,6 +12,7 @@
 #include "MotionControllerComponent.h"
 #include "XRMotionControllerBase.h" // for FXRMotionControllerBase::RightHandSourceId
 #include "GameFramework/CharacterMovementComponent.h"
+#include "GEPAbility.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
 
@@ -83,6 +84,8 @@ AGEPCharacter::AGEPCharacter()
 
 	// Uncomment the following line to turn motion controllers on by default:
 	//bUsingMotionControllers = true;
+
+	Ability = CreateDefaultSubobject<AGEPAbility>(TEXT("Ability"));
 }
 
 void AGEPCharacter::BeginPlay()
@@ -125,7 +128,7 @@ void AGEPCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInput
 	PlayerInputComponent->BindAction("Reload", IE_Pressed, this, &AGEPCharacter::OnReload);
 
 	// Bind reload Power event
-	PlayerInputComponent->BindAction("UsePower", IE_Pressed, this, &AGEPCharacter::UsePower);
+	PlayerInputComponent->BindAction("Ability", IE_Pressed, this, &AGEPCharacter::OnAbilityActivated);
 
 	// Enable touchscreen input
 	EnableTouchscreenMovement(PlayerInputComponent);
@@ -203,13 +206,13 @@ void AGEPCharacter::OnReload()
 	Ammo = MaxAmmo;
 }
 
-void AGEPCharacter::UsePower()
+void AGEPCharacter::OnAbilityActivated()
 {
-	if (Power == 100.0f)
+	if (Power >= 100)
 	{
+		Ability->Activated();
+		//AbilityActivated();
 		Power = 0;
-
-		GetCharacterMovement()->MaxWalkSpeed = 1000;
 	}
 }
 
