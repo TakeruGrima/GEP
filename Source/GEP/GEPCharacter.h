@@ -17,33 +17,33 @@ class AGEPCharacter : public ACharacter
 	UPROPERTY(VisibleDefaultsOnly, Category=Mesh)
 	class USkeletalMeshComponent* Mesh1P;
 
-	/** Gun mesh: 1st person view (seen only by self) */
-	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
-	class USkeletalMeshComponent* FP_Gun;
+	///** Gun mesh: 1st person view (seen only by self) */
+	//UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
+	//class USkeletalMeshComponent* FP_Gun;
 
-	/** Location on gun mesh where projectiles should spawn. */
-	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
-	class USceneComponent* FP_MuzzleLocation;
+	///** Location on gun mesh where projectiles should spawn. */
+	//UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
+	//class USceneComponent* FP_MuzzleLocation;
 
-	/** Gun mesh: VR view (attached to the VR controller directly, no arm, just the actual gun) */
-	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
-	class USkeletalMeshComponent* VR_Gun;
+	///** Gun mesh: VR view (attached to the VR controller directly, no arm, just the actual gun) */
+	//UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
+	//class USkeletalMeshComponent* VR_Gun;
 
-	/** Location on VR gun mesh where projectiles should spawn. */
-	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
-	class USceneComponent* VR_MuzzleLocation;
+	///** Location on VR gun mesh where projectiles should spawn. */
+	//UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
+	//class USceneComponent* VR_MuzzleLocation;
 
 	/** First person camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* FirstPersonCameraComponent;
 
-	/** Motion controller (right hand) */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	class UMotionControllerComponent* R_MotionController;
+	///** Motion controller (right hand) */
+	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	//class UMotionControllerComponent* R_MotionController;
 
-	/** Motion controller (left hand) */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	class UMotionControllerComponent* L_MotionController;
+	///** Motion controller (left hand) */
+	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	//class UMotionControllerComponent* L_MotionController;
 
 public:
 	AGEPCharacter();
@@ -53,7 +53,7 @@ protected:
 
 public:
 
-	const float MaxAmmo = 10;
+	/*const float MaxAmmo = 10;*/
 
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
@@ -63,13 +63,13 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseLookUpRate;
 
-	/** Gun muzzle's offset from the characters location */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Gameplay)
-	FVector GunOffset;
+	///** Gun muzzle's offset from the characters location */
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Gameplay)
+	//FVector GunOffset;
 
-	/** Projectile class to spawn */
-	UPROPERTY(EditDefaultsOnly, Category=Projectile)
-	TSubclassOf<class AGEPProjectile> ProjectileClass;
+	///** Projectile class to spawn */
+	//UPROPERTY(EditDefaultsOnly, Category=Projectile)
+	//TSubclassOf<class AGEPProjectile> ProjectileClass;
 
 	/** Ability */
 	UPROPERTY(EditDefaultsOnly, Category = Ability)
@@ -77,9 +77,16 @@ public:
 
 	AGEPAbility * Ability;
 
-	/** Sound to play each time we fire */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Gameplay)
-	class USoundBase* FireSound;
+	UPROPERTY(EditDefaultsOnly, Category = "Weapons")
+		TSubclassOf<class AWeaponBase> WeaponType;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapons")
+		AWeaponBase* Weapon;
+
+
+	///** Sound to play each time we fire */
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Gameplay)
+	//class USoundBase* FireSound;
 
 	/** AnimMontage to play each time we fire */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
@@ -89,8 +96,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 	uint32 bUsingMotionControllers : 1;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
-		float Ammo = 10;
+	/*UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+		float Ammo = 10;*/
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 		float Power = 0;
