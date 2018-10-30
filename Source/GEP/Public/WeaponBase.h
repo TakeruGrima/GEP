@@ -11,12 +11,6 @@ class GEP_API AWeaponBase : public AActor
 {
 	GENERATED_BODY()
 
-public:
-
-	bool UseAmmo = true;
-
-	const float MaxAmmo = 10;
-
 public:	
 	// Sets default values for this actor's properties
 	AWeaponBase();
@@ -28,10 +22,25 @@ public:
 	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
 		class USceneComponent* MuzzleLocation;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+		bool IsAutomatic = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+		bool UseAmmo = true;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+		float MaxAmmo;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+		float Rate;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	bool mFiringAutomatic = false;
+	bool mCanFire = true;
+	float mTimeSinceLastFire = 0;
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -59,9 +68,11 @@ public:
 		TSubclassOf<class UCameraShake> FireCamShake;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
-		float Ammo = 10;
+		float Ammo;
 
 	virtual bool FireWeapon();
+
+	void StopFiring();
 
 	void OnReload();
 };

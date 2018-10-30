@@ -43,50 +43,6 @@ AGEPCharacter::AGEPCharacter()
 	Mesh1P->CastShadow = false;
 	Mesh1P->RelativeRotation = FRotator(1.9f, -19.19f, 5.2f);
 	Mesh1P->RelativeLocation = FVector(-0.5f, -4.4f, -155.7f);
-
-	// Create a gun mesh component
-	//FP_Gun = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("FP_Gun"));
-	//FP_Gun->SetOnlyOwnerSee(true);			// only the owning player will see this mesh
-	//FP_Gun->bCastDynamicShadow = false;
-	//FP_Gun->CastShadow = false;
-	//// FP_Gun->SetupAttachment(Mesh1P, TEXT("GripPoint"));
-	//FP_Gun->SetupAttachment(RootComponent);
-
-	/*FP_MuzzleLocation = CreateDefaultSubobject<USceneComponent>(TEXT("MuzzleLocation"));
-	FP_MuzzleLocation->SetupAttachment(FP_Gun);
-	FP_MuzzleLocation->SetRelativeLocation(FVector(0.2f, 48.4f, -10.6f));*/
-
-	// Default offset from the character location for projectiles to spawn
-	/*GunOffset = FVector(100.0f, 0.0f, 10.0f);*/
-
-	// Note: The ProjectileClass and the skeletal mesh/anim blueprints for Mesh1P, FP_Gun, and VR_Gun 
-	// are set in the derived blueprint asset named MyCharacter to avoid direct content references in C++.
-
-	// Create VR Controllers.
-	/*R_MotionController = CreateDefaultSubobject<UMotionControllerComponent>(TEXT("R_MotionController"));
-	R_MotionController->MotionSource = FXRMotionControllerBase::RightHandSourceId;
-	R_MotionController->SetupAttachment(RootComponent);
-	L_MotionController = CreateDefaultSubobject<UMotionControllerComponent>(TEXT("L_MotionController"));
-	L_MotionController->SetupAttachment(RootComponent);*/
-
-	// Create a gun and attach it to the right-hand VR controller.
-	// Create a gun mesh component
-	//VR_Gun = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("VR_Gun"));
-	//VR_Gun->SetOnlyOwnerSee(true);			// only the owning player will see this mesh
-	//VR_Gun->bCastDynamicShadow = false;
-	//VR_Gun->CastShadow = false;
-	//VR_Gun->SetupAttachment(R_MotionController);
-	//VR_Gun->SetRelativeRotation(FRotator(0.0f, -90.0f, 0.0f));
-
-	//VR_MuzzleLocation = CreateDefaultSubobject<USceneComponent>(TEXT("VR_MuzzleLocation"));
-	//VR_MuzzleLocation->SetupAttachment(VR_Gun);
-	//VR_MuzzleLocation->SetRelativeLocation(FVector(0.000004, 53.999992, 10.000000));
-	//VR_MuzzleLocation->SetRelativeRotation(FRotator(0.0f, 90.0f, 0.0f));		// Counteract the rotation of the VR gun model.
-
-	// Uncomment the following line to turn motion controllers on by default:
-	//bUsingMotionControllers = true;
-
-	
 }
 
 void AGEPCharacter::BeginPlay()
@@ -96,29 +52,7 @@ void AGEPCharacter::BeginPlay()
 
 	Ability = (AGEPAbility*)GetWorld()->SpawnActor(AbilityClass);
 
-	//Attach gun mesh component to Skeleton, doing it here because the skeleton is not yet created in the constructor
-	//FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));
-
-	//// Show or hide the two versions of the gun based on whether or not we're using motion controllers.
-	//if (bUsingMotionControllers)
-	//{
-	//	VR_Gun->SetHiddenInGame(false, true);
-	//	Mesh1P->SetHiddenInGame(true, true);
-	//}
-	//else
-	//{
-	//	VR_Gun->SetHiddenInGame(true, true);
-	//	Mesh1P->SetHiddenInGame(false, true);
-	//}
-
-	if (WeaponType != NULL)
-	{
-		Weapon = GetWorld()->SpawnActor<AWeaponBase>(WeaponType);
-
-		Weapon->GetWeaponMesh()->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));
-
-		Weapon->SetOwner(this);
-	}
+	EquipWeapon();
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -135,12 +69,16 @@ void AGEPCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInput
 
 	// Bind fire event
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AGEPCharacter::OnFire);
+	PlayerInputComponent->BindAction("Fire", IE_Released, this, &AGEPCharacter::OnStopFiring);
 
 	// Bind reload event
 	PlayerInputComponent->BindAction("Reload", IE_Pressed, this, &AGEPCharacter::OnReload);
 
 	// Bind reload Power event
 	PlayerInputComponent->BindAction("Ability", IE_Pressed, this, &AGEPCharacter::OnAbilityActivated);
+
+	// Bind switch weapon
+	PlayerInputComponent->BindAction("SwitchWeapon", IE_Pressed, this, &AGEPCharacter::OnSwitchWeapon);
 
 	// Enable touchscreen input
 	EnableTouchscreenMovement(PlayerInputComponent);
@@ -160,60 +98,20 @@ void AGEPCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInput
 	PlayerInputComponent->BindAxis("LookUpRate", this, &AGEPCharacter::LookUpAtRate);
 }
 
+void AGEPCharacter::EquipWeapon()
+{
+	if (WeaponType != NULL)
+	{
+		Weapon = GetWorld()->SpawnActor<AWeaponBase>(WeaponType);
+
+		Weapon->GetWeaponMesh()->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));
+
+		Weapon->SetOwner(this);
+	}
+}
+
 void AGEPCharacter::OnFire()
 {
-	//if (Ammo <= 0) return;
-
-	// try and fire a projectile
-	//if (ProjectileClass != NULL)
-	//{
-	//	UWorld* const World = GetWorld();
-	//	if (World != NULL)
-	//	{
-	//		if (bUsingMotionControllers)
-	//		{
-	//			const FRotator SpawnRotation = VR_MuzzleLocation->GetComponentRotation();
-	//			const FVector SpawnLocation = VR_MuzzleLocation->GetComponentLocation();
-	//			World->SpawnActor<AGEPProjectile>(ProjectileClass, SpawnLocation, SpawnRotation);
-	//		}
-	//		else
-	//		{
-	//			const FRotator SpawnRotation = GetControlRotation();
-	//			// MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
-	//			const FVector SpawnLocation = ((FP_MuzzleLocation != nullptr) ? FP_MuzzleLocation->GetComponentLocation() : GetActorLocation()) + SpawnRotation.RotateVector(GunOffset);
-
-	//			//Set Spawn Collision Handling Override
-	//			FActorSpawnParameters ActorSpawnParams;
-	//			ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
-
-	//			// spawn the projectile at the muzzle
-	//			WeaponFired();
-	//			World->SpawnActor<AGEPProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
-
-	//			Ammo -= 1;
-	//		}
-	//	}
-	//}
-
-	//// try and play the sound if specified
-	//if (FireSound != NULL)
-	//{
-	//	UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
-	////}
-
-
-
-	//// try and play a firing animation if specified
-	//if (FireAnimation != NULL)
-	//{
-	//	// Get the animation object for the arms mesh
-	//	UAnimInstance* AnimInstance = Mesh1P->GetAnimInstance();
-	//	if (AnimInstance != NULL)
-	//	{
-	//		AnimInstance->Montage_Play(FireAnimation, 1.f);
-	//	}
-	//}
-
 	if (Weapon->FireWeapon())
 	{
 		WeaponFired();
@@ -229,7 +127,12 @@ void AGEPCharacter::OnFire()
 			}
 		}
 	}
+}
 
+void AGEPCharacter::OnStopFiring()
+{
+	if (Weapon != NULL)
+		Weapon->StopFiring();
 }
 
 void AGEPCharacter::OnReload()
@@ -244,6 +147,20 @@ void AGEPCharacter::OnAbilityActivated()
 	{
 		Ability->Activated();
 		Power = 0;
+	}
+}
+
+void AGEPCharacter::OnSwitchWeapon()
+{
+	mWeaponIndex = (mWeaponIndex + 1) % Weapons.Num();
+
+	if (mWeaponIndex >= 0 && mWeaponIndex < Weapons.Num())
+	{
+		Weapon->Destroy();
+
+		WeaponType = Weapons[mWeaponIndex];
+
+		EquipWeapon();
 	}
 }
 
@@ -276,44 +193,6 @@ void AGEPCharacter::EndTouch(const ETouchIndex::Type FingerIndex, const FVector 
 	}
 	TouchItem.bIsPressed = false;
 }
-
-//Commenting this section out to be consistent with FPS BP template.
-//This allows the user to turn without using the right virtual joystick
-
-//void AGEPCharacter::TouchUpdate(const ETouchIndex::Type FingerIndex, const FVector Location)
-//{
-//	if ((TouchItem.bIsPressed == true) && (TouchItem.FingerIndex == FingerIndex))
-//	{
-//		if (TouchItem.bIsPressed)
-//		{
-//			if (GetWorld() != nullptr)
-//			{
-//				UGameViewportClient* ViewportClient = GetWorld()->GetGameViewport();
-//				if (ViewportClient != nullptr)
-//				{
-//					FVector MoveDelta = Location - TouchItem.Location;
-//					FVector2D ScreenSize;
-//					ViewportClient->GetViewportSize(ScreenSize);
-//					FVector2D ScaledDelta = FVector2D(MoveDelta.X, MoveDelta.Y) / ScreenSize;
-//					if (FMath::Abs(ScaledDelta.X) >= 4.0 / ScreenSize.X)
-//					{
-//						TouchItem.bMoved = true;
-//						float Value = ScaledDelta.X * BaseTurnRate;
-//						AddControllerYawInput(Value);
-//					}
-//					if (FMath::Abs(ScaledDelta.Y) >= 4.0 / ScreenSize.Y)
-//					{
-//						TouchItem.bMoved = true;
-//						float Value = ScaledDelta.Y * BaseTurnRate;
-//						AddControllerPitchInput(Value);
-//					}
-//					TouchItem.Location = Location;
-//				}
-//				TouchItem.Location = Location;
-//			}
-//		}
-//	}
-//}
 
 void AGEPCharacter::MoveForward(float Value)
 {
