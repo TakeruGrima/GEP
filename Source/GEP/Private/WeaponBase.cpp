@@ -95,6 +95,8 @@ bool AWeaponBase::FireWeapon()
 				//DrawDebugLine(GetWorld(), MuzzlePos, TraceEnd, FColor::Red, false, 1.0f, 0, 1.0f);
 				//Get the hit actor from hit
 				AActor* hitActor = hit.GetActor();
+
+				UGameplayStatics::ApplyDamage(hitActor, Damage, MyOwner->GetInstigatorController(), MyOwner, DamageType);
 				//hitActor->Destroy();
 
 				// try and play the sound if specified

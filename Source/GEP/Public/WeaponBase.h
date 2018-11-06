@@ -34,6 +34,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 		float Rate;
 
+	/** Projectile class to spawn */
+	UPROPERTY(EditDefaultsOnly, Category = Gameplay)
+		TSubclassOf<class UDamageType> DamageType;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+		float Damage;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
