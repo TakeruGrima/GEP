@@ -6,6 +6,14 @@
 #include "GameFramework/Character.h"
 #include "NPCBaseClass.generated.h"
 
+UENUM()
+enum eAINavstate
+{
+	IDLE UMETA(DisplayName = "Idle"),
+	PATROL UMETA(DisplayName = "Patrol"),
+	CHASE UMETA(DisplayName = "Chase")
+};
+
 UCLASS()
 class GEP_API ANPCBaseClass : public ACharacter
 {
@@ -26,6 +34,13 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Enum) 
+		TEnumAsByte<eAINavstate> NavState;
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Navigation")
+		void Patroling();
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Navigation")
+		void Chasing();
 	
 };

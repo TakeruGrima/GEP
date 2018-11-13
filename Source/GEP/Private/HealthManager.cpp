@@ -30,7 +30,7 @@ void UHealthManager::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	if (Health <= 0)
-		this->
+		Death();
 	// ...
 }
 
