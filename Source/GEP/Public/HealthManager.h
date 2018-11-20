@@ -19,6 +19,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 		float Health;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+		float MaxHealth;
+
 	UFUNCTION(BlueprintImplementableEvent, Category = Gameplay)
 		void Death();
 

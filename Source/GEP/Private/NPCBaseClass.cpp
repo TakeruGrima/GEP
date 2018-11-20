@@ -23,6 +23,17 @@ void ANPCBaseClass::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	switch (NavState)
+	{
+	case PATROL:
+		Patroling();
+		break;
+	case CHASE:
+		Chasing();
+		break;
+	default:
+		break;
+	}
 }
 
 // Called to bind functionality to input
