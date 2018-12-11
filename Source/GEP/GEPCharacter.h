@@ -4,12 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "UnderlookCharacter.h"
 #include "GEPCharacter.generated.h"
 
 class UInputComponent;
 
 UCLASS(config=Game)
-class AGEPCharacter : public ACharacter
+class AGEPCharacter : public AUnderlookCharacter
 {
 	GENERATED_BODY()
 

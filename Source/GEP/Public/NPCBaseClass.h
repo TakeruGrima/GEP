@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "UnderlookCharacter.h"
 #include "NPCBaseClass.generated.h"
 
 UENUM()
@@ -15,7 +16,7 @@ enum eAINavstate
 };
 
 UCLASS()
-class GEP_API ANPCBaseClass : public ACharacter
+class GEP_API ANPCBaseClass : public AUnderlookCharacter
 {
 	GENERATED_BODY()
 

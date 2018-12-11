@@ -15,3 +15,23 @@ AGEPGameMode::AGEPGameMode()
 	// use our custom HUD class
 	HUDClass = AGEPHUD::StaticClass();
 }
+
+void AGEPGameMode::LevelSetupComplete()
+{
+	OnGameStart();
+}
+
+void AGEPGameMode::CharacterKilled(AUnderlookCharacter * killedCharacter, AActor * killedBy)
+{
+	OnCharacterKilled(killedCharacter, killedBy);
+}
+
+void AGEPGameMode::GameOver(int winningTeamID)
+{
+	OnGameEnd(winningTeamID);
+}
+
+void AGEPGameMode::ObjectiveComplete(int teamID, AUnderlookCharacter * completedBy)
+{
+	OnObjectiveComplete(teamID, completedBy);
+}

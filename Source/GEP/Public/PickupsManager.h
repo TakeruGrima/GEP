@@ -4,8 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "PickupsManager.generated.h"
 #include "PickupBase.h"
+#include "PickupsManager.generated.h"
 
 UCLASS()
 class GEP_API APickupsManager : public AActor
