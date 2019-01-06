@@ -1,10 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "PatrolPoint.h"
+#include "PatrolPointBase.h"
 
 
 // Sets default values
-APatrolPoint::APatrolPoint()
+APatrolPointBase::APatrolPointBase()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -12,14 +12,14 @@ APatrolPoint::APatrolPoint()
 }
 
 // Called when the game starts or when spawned
-void APatrolPoint::BeginPlay()
+void APatrolPointBase::BeginPlay()
 {
 	Super::BeginPlay();
 	
 }
 
 // Called every frame
-void APatrolPoint::Tick(float DeltaTime)
+void APatrolPointBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 

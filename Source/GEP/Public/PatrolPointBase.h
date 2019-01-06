@@ -4,27 +4,27 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "PatrolPoint.generated.h"
+#include "PatrolPointBase.generated.h"
 
 UCLASS()
-class GEP_API APatrolPoint : public AActor
+class GEP_API APatrolPointBase : public AActor
 {
 	GENERATED_BODY()
 
 private:
 	UPROPERTY(VisibleDefaultsOnly, Category = Gameplay)
 		int CharacterID;
-public:	
+public:
 	// Sets default values for this actor's properties
-	APatrolPoint();
+	APatrolPointBase();
 
-	int GetCharacterID() { return CharacterID;}
+	int GetCharacterID() { return CharacterID; }
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 };
