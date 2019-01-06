@@ -16,20 +16,36 @@ APickupBase::APickupBase()
 // Called when the game starts or when spawned
 void APickupBase::BeginPlay()
 {
-	Super::BeginPlay();
-	
+	Super::BeginPlay();	
 }
 
 // Called every frame
 void APickupBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 void APickupBase::NotifyActorBeginOverlap(AActor * OtherActor)
 {
 	// on overlap
-	OnActivate(OtherActor);
+	if(!IsActive)
+		OnActivate(OtherActor);
+}
+
+void APickupBase::DeSpawn()
+{
+	IsActive = true;
+
+	SetActorHiddenInGame(IsActive);
+}
+
+void APickupBase::ReSpawn()
+{
+	if(EffectDuration > 0)
+		IsActive = false;
+	if (CanRespawn)
+	{
+		SetActorHiddenInGame(IsActive);
+	}
 }
 
